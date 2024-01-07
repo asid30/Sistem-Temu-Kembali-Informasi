@@ -89,14 +89,3 @@ def latent_semantic_analysis(dataset):
   dataset['topik'] = topik
 
   return dataset['title'].tolist()
-  # return dataset.iloc[0].to_dict()
-    
-# dicari = 'intro kembang KRISAN POTONG DI DESA pesawaran'
-# dicari = input('Masukan Pencarian: ')
-
-# dataset = search(dicari)
-# dataset = search(dicari)
-# judul = dataset['title']
-# print(judul)
-# print(type(search(dicari)))
-# print(search(dicari))
