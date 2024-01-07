@@ -87,5 +87,29 @@ def latent_semantic_analysis(dataset):
 
     topik.append(kata_kunci)
   dataset['topik'] = topik
+  dataset = dataset.drop(columns=[
+     'text_stemmed',
+     'fulltext_stopword', 
+     'fulltext', 
+     'language_accuracy', 
+     'language', 
+     'text_raw', 
+     'abstract', 
+     'date',
+     'keywords',
+     'similaritas',
+     'new_abstract',
+     'publisher',
+     'publication',
+     'divisions'
+    ])
 
-  return dataset['title'].tolist()
+  dataset = dataset.T
+
+  hasil_pencarian = []
+  for i in dataset.columns.values.tolist():
+    hasil_pencarian.append(dataset[i].to_list())
+
+  return hasil_pencarian
+  # return dataset[1].tolist()
+  # return dataset['title'].tolist()
