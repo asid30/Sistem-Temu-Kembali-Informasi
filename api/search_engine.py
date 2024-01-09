@@ -110,12 +110,19 @@ def tentukan_topik(dataset):
     #  'divisions'
     ])
   
-  dataset = hapus_nan(dataset)
+  dataset = hapus_nan(dataset) #hapus nilai nan
+  # return convert_dataframe_to_list(dataset)
+  return convert_dataframe_to_dict(dataset)
 
+def convert_dataframe_to_list(dataset):
   dataset = dataset.T
-
   hasil_pencarian = []
   for i in dataset.columns.values.tolist():
     hasil_pencarian.append(dataset[i].to_list())
-
   return hasil_pencarian
+
+def convert_dataframe_to_dict(dataset):
+  dataset = dataset.T
+  hasil_pencarian = dataset.to_dict()
+  return hasil_pencarian
+  

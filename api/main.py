@@ -8,7 +8,10 @@ app = FastAPI()
 
 @app.get("/cari")
 def read_root(kueri:Union[str, None] = None):
-    return search_engine.search(kueri)
+    if kueri == None:
+        return ['Anda tidak memberikan kueri!']
+    else:
+        return search_engine.search(kueri)
 
 @app.get("/")
 def abdul():
