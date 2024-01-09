@@ -76,7 +76,7 @@ def tentukan_topik(dataset):
     if len(data) <= 5:
       num_topics = len(data) # Jumlah topik yang ingin diidentifikasi
     else:
-      num_topics = 3  # Jumlah topik yang ingin diidentifikasi
+      num_topics = 5  # Jumlah topik yang ingin diidentifikasi
     lsa_model = TruncatedSVD(n_components=num_topics, random_state=42)
     lsa_topic_matrix = lsa_model.fit_transform(tfidf_matrix)
 
