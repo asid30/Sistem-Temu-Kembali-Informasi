@@ -9,7 +9,7 @@ from nltk.tokenize import RegexpTokenizer
 from tqdm import tqdm
 
 def search(teks):
-  df = pd.read_excel(r'D:\TEST Codingan\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(1000)
+  df = pd.read_excel(r'D:\TEST Codingan\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx')
   df = df.drop(columns='Unnamed: 0')
 
   teks = stem(teks)
@@ -35,8 +35,7 @@ def search(teks):
 
   df_temu = pd.DataFrame(df_temu)
   df_temu['similaritas'] = similaritas
-
-  return latent_semantic_analysis(df_temu)
+  return tentukan_topik(df_temu)
 
 def remove_stopwords(text):
   factory = StopWordRemoverFactory()
@@ -56,7 +55,11 @@ def stem(text):
   stemmer = factory2.create_stemmer()
   return stemmer.stem(text)
 
-def latent_semantic_analysis(dataset):
+def hapus_nan(dataset):
+  dataset.fillna("", inplace=True) 
+  return dataset
+
+def tentukan_topik(dataset):
   tokenizer = RegexpTokenizer(r'\w+')
   topik = []
 
@@ -70,7 +73,10 @@ def latent_semantic_analysis(dataset):
     tfidf_matrix = tfidf_vectorizer.fit_transform(data)
 
     # Terapkan LSA dengan TruncatedSVD
-    num_topics = 4  # Jumlah topik yang ingin diidentifikasi
+    if len(data) <= 5:
+      num_topics = len(data) # Jumlah topik yang ingin diidentifikasi
+    else:
+      num_topics = 3  # Jumlah topik yang ingin diidentifikasi
     lsa_model = TruncatedSVD(n_components=num_topics, random_state=42)
     lsa_topic_matrix = lsa_model.fit_transform(tfidf_matrix)
 
@@ -93,16 +99,18 @@ def latent_semantic_analysis(dataset):
      'fulltext', 
      'language_accuracy', 
      'language', 
-     'text_raw', 
+     'text_raw',
      'abstract', 
-     'date',
-     'keywords',
+    #  'date',
+    #  'keywords',
      'similaritas',
-     'new_abstract',
-     'publisher',
-     'publication',
-     'divisions'
+    #  'new_abstract',
+    #  'publisher',
+    #  'publication',
+    #  'divisions'
     ])
+  
+  dataset = hapus_nan(dataset)
 
   dataset = dataset.T
 
@@ -111,5 +119,3 @@ def latent_semantic_analysis(dataset):
     hasil_pencarian.append(dataset[i].to_list())
 
   return hasil_pencarian
-  # return dataset[1].tolist()
-  # return dataset['title'].tolist()
