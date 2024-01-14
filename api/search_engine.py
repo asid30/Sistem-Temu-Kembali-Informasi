@@ -111,8 +111,8 @@ def tentukan_topik(dataset):
     ])
   
   dataset = hapus_nan(dataset) #hapus nilai nan
-  # return convert_dataframe_to_list(dataset)
-  return convert_dataframe_to_dict(dataset)
+  return convert_dataframe_to_list(dataset)
+  # return convert_dataframe_to_dict(dataset)
 
 def convert_dataframe_to_list(dataset):
   dataset = dataset.T
