@@ -31,11 +31,11 @@ def search(teks):
 
     if cosine_similarities[0][0] > 0.1:
       df_temu.append(df.iloc[i])
-      similaritas.append(cosine_similarities)
+      similaritas.append(float(cosine_similarities))
 
   df_temu = pd.DataFrame(df_temu)
   df_temu['similaritas'] = similaritas
-  return tentukan_topik(df_temu)
+  return tentukan_topik(df_temu.sort_values(by=['similaritas'], ascending=False))
 
 def remove_stopwords(text):
   factory = StopWordRemoverFactory()
@@ -69,16 +69,17 @@ def tentukan_topik(dataset):
     data = tokenizer.tokenize(teks)
 
     # Proses vektorisasi teks dengan TF-IDF
-    tfidf_vectorizer = TfidfVectorizer(max_features=5000)
+    tfidf_vectorizer = TfidfVectorizer()
     tfidf_matrix = tfidf_vectorizer.fit_transform(data)
+    jumlah_feature = tfidf_matrix.shape
 
     # Terapkan LSA dengan TruncatedSVD
-    if len(data) <= 5:
-      num_topics = len(data) # Jumlah topik yang ingin diidentifikasi
+    if jumlah_feature[1] < 5:
+      num_topics = jumlah_feature[1] # Jumlah topik yang ingin diidentifikasi
     else:
-      num_topics = 5  # Jumlah topik yang ingin diidentifikasi
+      num_topics = 5 # Jumlah topik yang ingin diidentifikasi
     lsa_model = TruncatedSVD(n_components=num_topics, random_state=42)
-    lsa_topic_matrix = lsa_model.fit_transform(tfidf_matrix)
+    lsa_model.fit_transform(tfidf_matrix)
 
     # Ambil kata-kata kunci untuk setiap topik
     terms = tfidf_vectorizer.get_feature_names_out()
@@ -103,7 +104,7 @@ def tentukan_topik(dataset):
      'abstract', 
     #  'date',
     #  'keywords',
-     'similaritas',
+    #  'similaritas',
     #  'new_abstract',
     #  'publisher',
     #  'publication',
@@ -125,4 +126,3 @@ def convert_dataframe_to_dict(dataset):
   dataset = dataset.T
   hasil_pencarian = dataset.to_dict()
   return hasil_pencarian
-  
