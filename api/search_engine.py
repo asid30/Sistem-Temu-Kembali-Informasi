@@ -9,7 +9,7 @@ from nltk.tokenize import RegexpTokenizer
 from tqdm import tqdm
 
 def search(teks, pilihan: int = 0):
-  df = pd.read_excel(r'D:\TEST Codingan\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(500)
+  df = pd.read_excel(r'D:\TEST Codingan\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(1000)
   df = df.drop(columns='Unnamed: 0')
 
   teks = stem(teks)

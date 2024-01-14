@@ -13,8 +13,9 @@ def carijurnal_post(kueri:str = Form(...)):
             return {"hasil" :'Anda tidak memberikan kueri atau hasil pencarian tidak ditemukan!', 
                     "panjang list" : 0}
         else:
-            return {"hasil" : search_engine.search(kueri), 
-                    "panjang list" : len(search_engine.search(kueri))}
+            hasil_kueri = search_engine.search(kueri)
+            return {"hasil" : hasil_kueri, 
+                    "panjang list" : len(hasil_kueri)}
     except:
         return {"hasil" : 'Anda tidak memberikan kueri atau hasil pencarian tidak ditemukan!', 
                 "panjang list" : 0}
