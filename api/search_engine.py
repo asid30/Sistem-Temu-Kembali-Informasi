@@ -8,8 +8,8 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from nltk.tokenize import RegexpTokenizer
 from tqdm import tqdm
 
-def search(teks):
-  df = pd.read_excel(r'D:\TEST Codingan\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx')
+def search(teks, pilihan: int = 0):
+  df = pd.read_excel(r'D:\TEST Codingan\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(500)
   df = df.drop(columns='Unnamed: 0')
 
   teks = stem(teks)
@@ -35,7 +35,7 @@ def search(teks):
 
   df_temu = pd.DataFrame(df_temu)
   df_temu['similaritas'] = similaritas
-  return tentukan_topik(df_temu.sort_values(by=['similaritas'], ascending=False))
+  return tentukan_topik(df_temu.sort_values(by=['similaritas'], ascending=False), pilihan)
 
 def remove_stopwords(text):
   factory = StopWordRemoverFactory()
@@ -59,7 +59,7 @@ def hapus_nan(dataset):
   dataset.fillna("", inplace=True) 
   return dataset
 
-def tentukan_topik(dataset):
+def tentukan_topik(dataset, pilihan:int = 0):
   tokenizer = RegexpTokenizer(r'\w+')
   topik = []
 
@@ -112,8 +112,12 @@ def tentukan_topik(dataset):
     ])
   
   dataset = hapus_nan(dataset) #hapus nilai nan
-  return convert_dataframe_to_list(dataset)
-  # return convert_dataframe_to_dict(dataset)
+  if pilihan == 0:
+    return convert_dataframe_to_list(dataset)
+  elif pilihan == 1:
+    return dataset
+  elif pilihan == 2:
+    return convert_dataframe_to_dict(dataset)
 
 def convert_dataframe_to_list(dataset):
   dataset = dataset.T
