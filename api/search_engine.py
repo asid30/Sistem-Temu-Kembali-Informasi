@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
@@ -8,9 +9,13 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from nltk.tokenize import RegexpTokenizer
 from tqdm import tqdm
 
-def search(teks, pilihan: int = 0):
-  df = pd.read_excel(r'D:\TEST Codingan\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(1000)
-  df = df.drop(columns='Unnamed: 0')
+def filter_by_divisions(dataset, fakultas):
+  
+  return dataset
+
+def search(teks, fakultas, pilihan: int = 0):
+  df_utama = pd.read_excel(r'D:\Project KP\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(1000)
+  df = filter_by_divisions(df, fakultas)
 
   teks = stem(teks)
 
