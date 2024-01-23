@@ -1,19 +1,17 @@
 from fastapi import FastAPI, Form
-from typing import Union
-import numpy as np
 import search_engine
 
 app = FastAPI()
 # uvicorn main:app --reload
 
 @app.post("/cari2")
-def carijurnal_post(kueri:str = Form(...)):
+def carijurnal_post(kueri:str = Form(...), fakultas:str = Form(...)):
     try:
         if kueri.strip() == None:
             return {"hasil" :'Anda tidak memberikan kueri atau hasil pencarian tidak ditemukan!', 
                     "panjang list" : 0}
         else:
-            hasil_kueri = search_engine.search(kueri)
+            hasil_kueri = search_engine.search(kueri, fakultas)
             return {"hasil" : hasil_kueri, 
                     "panjang list" : len(hasil_kueri)}
     except:
