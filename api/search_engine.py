@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import re
+import ast
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
@@ -8,11 +10,15 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from nltk.tokenize import RegexpTokenizer
 from tqdm import tqdm
 
-def search(teks, pilihan: int = 0):
-  df = pd.read_excel(r'D:\TEST Codingan\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(1000)
-  df = df.drop(columns='Unnamed: 0')
+def search(teks: str, fakultas: str = "ALL", pilihan: int = 0):
+  df_utama = pd.read_excel(r'D:\Project KP\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(2000)
+  df_utama = df_utama.drop(columns = ['Unnamed: 0'])
+  if fakultas.upper() == 'FKIP' or fakultas == 'FMIPA' or fakultas == 'FEB' or fakultas == 'FH' or fakultas == 'FT' or fakultas == 'FISIP' or fakultas == 'FK':
+    df = filter_by_divisions(df_utama, fakultas)
+  else:
+    df = df_utama
 
-  teks = stem(teks)
+  teks = stem(remove_stopwords(teks))
 
   df_temu = []
   similaritas = []
@@ -58,6 +64,36 @@ def stem(text):
 def hapus_nan(dataset):
   dataset.fillna("", inplace=True) 
   return dataset
+
+def filter_by_divisions(dataset, fakultas):
+  new_divisions = []
+  for i in range(len(dataset['divisions'])):
+    try:
+      new_divisions.append(ast.literal_eval(dataset['divisions'].iloc[i]))
+    except:
+      new_divisions.append(ast.literal_eval('[]'))
+  dataset['new_divisions'] = new_divisions
+  
+  new_fakultas = []
+  for i in range(len(dataset)):
+    temp = dataset['new_divisions'].iloc[i]
+    temp2 = []
+    for j in range(len(temp)):
+      temp2.append(pisahkan_kata(temp[j]))
+    new_fakultas.append(temp2)
+  dataset['fakultas'] = new_fakultas
+  
+  df_hasil = []
+  for i in range(len(dataset)):  
+    if fakultas in dataset['fakultas'].iloc[i]:
+      df_hasil.append(dataset.iloc[i])
+  df_hasil = pd.DataFrame(df_hasil)
+  
+  return df_hasil
+
+def pisahkan_kata(kata):
+    hasil = re.sub(r'\d', '', kata)
+    return hasil
 
 def tentukan_topik(dataset, pilihan:int = 0):
   tokenizer = RegexpTokenizer(r'\w+')
