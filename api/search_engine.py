@@ -13,7 +13,7 @@ from tqdm import tqdm
 def search(teks: str, fakultas: str = "ALL", pilihan: int = 0):
   df_utama = pd.read_excel(r'D:\Project KP\Sistem-Temu-Kembali-Informasi\Riset Jupiter Notebook\Data\df_final.xlsx').head(2000)
   df_utama = df_utama.drop(columns = ['Unnamed: 0'])
-  if fakultas == 'FKIP' or fakultas == 'FMIPA' or fakultas == 'FEB' or fakultas == 'FH' or fakultas == 'FT' or fakultas == 'FISIP' or fakultas == 'FK':
+  if fakultas.upper() == 'FKIP' or fakultas == 'FMIPA' or fakultas == 'FEB' or fakultas == 'FH' or fakultas == 'FT' or fakultas == 'FISIP' or fakultas == 'FK':
     df = filter_by_divisions(df_utama, fakultas)
   else:
     df = df_utama
